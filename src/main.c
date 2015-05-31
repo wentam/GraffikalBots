@@ -43,8 +43,7 @@ void init(int *width, int *height) {
   init_renderers(GRAFFIKS_RENDERER_DEFERRED);
 
   bot1 = load_obj(GRAFFIKS_RENDERER_DEFERRED, "bot.obj");
-  bot2 =
-      load_obj(GRAFFIKS_RENDERER_DEFERRED, "bot.obj");
+  bot2 = load_obj(GRAFFIKS_RENDERER_DEFERRED, "bot.obj");
 
   l = add_point_light();
   l->z = 5;
