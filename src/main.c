@@ -40,10 +40,10 @@ int main(int argc, char *argv[]) {
 }
 
 void init(int *width, int *height) {
-  init_renderers(GRAFFIKS_RENDERER_DEFERRED);
+  init_renderers(GRAFFIKS_RENDERER_FORWARD);
 
-  bot1 = load_obj(GRAFFIKS_RENDERER_DEFERRED, "bot.obj");
-  bot2 = load_obj(GRAFFIKS_RENDERER_DEFERRED, "bot.obj");
+  bot1 = load_obj(GRAFFIKS_RENDERER_FORWARD, "bot.obj");
+  bot2 = load_obj(GRAFFIKS_RENDERER_FORWARD, "bot.obj");
 
   l = add_point_light();
   l->z = 5;
@@ -68,6 +68,6 @@ void update(float time_step) {
 }
 
 void done() {
-  terminate_renderers(GRAFFIKS_RENDERER_DEFERRED);
+  terminate_renderers(GRAFFIKS_RENDERER_FORWARD);
   bots_free_game(g);
 }
