@@ -12,4 +12,5 @@ add_executable(graffikalbots ${base_SRC})
 
 find_library(GRAFFIKS_LIB graffiks)
 find_library(BOTS_LIB bots)
-target_link_libraries(graffikalbots ${GRAFFIKS_LIB} ${BOTS_LIB})
+find_library(M_LIB m)
+target_link_libraries(graffikalbots ${GRAFFIKS_LIB} ${BOTS_LIB} ${M_LIB})

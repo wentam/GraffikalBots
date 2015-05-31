@@ -11,6 +11,8 @@
 bots_game *g;
 object *bot1;
 object *bot2;
+object *bot1_turret;
+object *bot2_turret;
 point_light *l;
 
 int main(int argc, char *argv[]) {
@@ -44,6 +46,11 @@ void init(int *width, int *height) {
 
   bot1 = load_obj(GRAFFIKS_RENDERER_FORWARD, "bot.obj");
   bot2 = load_obj(GRAFFIKS_RENDERER_FORWARD, "bot.obj");
+  bot1_turret = load_obj(GRAFFIKS_RENDERER_FORWARD, "bot_turret.obj");
+  bot2_turret = load_obj(GRAFFIKS_RENDERER_FORWARD, "bot_turret.obj");
+
+  //  bot1_turret->location_z = -0.01;
+  //  bot2_turret->location_z = -0.01;
 
   l = add_point_light();
   l->z = 5;
@@ -51,17 +58,34 @@ void init(int *width, int *height) {
 
 void update(float time_step) {
   bots_tick(g);
+
   bot1->location_x = ((float)g->tanks[0]->x) / 200;
   bot1->location_y = ((float)g->tanks[0]->y) / 200;
+  bot1_turret->location_x = (((float)g->tanks[0]->x) / 200);
+  bot1_turret->location_y = (((float)g->tanks[0]->y) / 200);
   bot2->location_x = ((float)g->tanks[1]->x) / 200;
   bot2->location_y = ((float)g->tanks[1]->y) / 200;
+  bot2_turret->location_x = ((float)g->tanks[1]->x) / 200;
+  bot2_turret->location_y = ((float)g->tanks[1]->y) / 200;
 
   bot1->angle = ((float)g->tanks[0]->heading) * 1.4;
   bot1->rot_x = 0;
   bot1->rot_y = 0;
   bot1->rot_z = 1;
 
-  bot2->angle = ((float)g->tanks[0]->heading) * 1.4;
+  bot1_turret->angle =
+      ((float)g->tanks[0]->heading + (float)g->tanks[0]->turret_offset) * 1.4;
+  bot1->rot_x = 0;
+  bot1->rot_y = 0;
+  bot1->rot_z = 1;
+
+  bot2->angle = ((float)g->tanks[1]->heading) * 1.4;
+  bot2->rot_x = 0;
+  bot2->rot_y = 0;
+  bot2->rot_z = 1;
+
+  bot2_turret->angle =
+      ((float)g->tanks[0]->heading + (float)g->tanks[0]->turret_offset) * 1.4;
   bot2->rot_x = 0;
   bot2->rot_y = 0;
   bot2->rot_z = 1;
