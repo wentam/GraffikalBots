@@ -49,9 +49,6 @@ void init(int *width, int *height) {
   bot1_turret = load_obj(GRAFFIKS_RENDERER_FORWARD, "bot_turret.obj");
   bot2_turret = load_obj(GRAFFIKS_RENDERER_FORWARD, "bot_turret.obj");
 
-  //  bot1_turret->location_z = -0.01;
-  //  bot2_turret->location_z = -0.01;
-
   l = add_point_light();
   l->z = 5;
 }
