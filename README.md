@@ -1,4 +1,4 @@
-# GraffikBots
+# GraffikalBots
 Graphical frontend to [retupmoca/bots](https://github.com/retupmoca/bots)
 
 Currently will look for .obj files in your current dir, so run from the GraffikalBots root folder:
