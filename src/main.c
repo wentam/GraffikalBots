@@ -33,8 +33,8 @@ int main(int argc, char *argv[]) {
    * right now. In the future, it'll position them with some standard
    * algorithm.
    */
-  g->tanks[0]->x = 50;
-  g->tanks[0]->y = 50;
+  g->tanks[0]->x = 200;
+  g->tanks[0]->y = 200;
 
   init_graffiks_xorg(1024, 768, "GraffikalBots", init, update, done);
 }
