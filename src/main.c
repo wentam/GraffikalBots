@@ -117,7 +117,7 @@ void update(float time_step) {
   bot2->rot_z = 1;
 
   bot2_turret->angle =
-      ((float)g->tanks[0]->heading + (float)g->tanks[0]->turret_offset) * 1.4;
+      ((float)g->tanks[1]->heading + (float)g->tanks[1]->turret_offset) * 1.4;
   bot2->rot_x = 0;
   bot2->rot_y = 0;
   bot2->rot_z = 1;
