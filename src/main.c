@@ -3,10 +3,14 @@
 
 #ifdef LINUX
 #include <graffiks/driver/driver-linux.h>
+/* forward renderer for anti-aliasing */
+#define RENDERER GRAFFIKS_RENDERER_FORWARD
 #endif
 #ifdef _WIN32
 #include <graffiks/driver/driver-windows.h>
 #include <windows.h>
+/* deferred renderer because the forward renderer doesn't work on windows yet */
+#define RENDERER GRAFFIKS_RENDERER_DEFERRED
 #endif
 
 #include <graffiks/material/material.h>
@@ -16,6 +20,7 @@
 #include <graffiks/object/object.h>
 #include <graffiks/lights.h>
 #include <bots/bots.h>
+
 
 bots_world *g;
 object *bot1;
@@ -60,12 +65,12 @@ int main(int argc, char *argv[]) {
 }
 
 void init(int *width, int *height) {
-  init_renderers(GRAFFIKS_RENDERER_FORWARD);
+  init_renderers(RENDERER);
 
-  bot1 = load_obj(GRAFFIKS_RENDERER_FORWARD, "bot.obj");
-  bot2 = load_obj(GRAFFIKS_RENDERER_FORWARD, "bot.obj");
-  bot1_turret = load_obj(GRAFFIKS_RENDERER_FORWARD, "bot_turret.obj");
-  bot2_turret = load_obj(GRAFFIKS_RENDERER_FORWARD, "bot_turret.obj");
+  bot1 = load_obj(RENDERER, "bot.obj");
+  bot2 = load_obj(RENDERER, "bot.obj");
+  bot1_turret = load_obj(RENDERER, "bot_turret.obj");
+  bot2_turret = load_obj(RENDERER, "bot_turret.obj");
 
   l = add_point_light();
   l->z = 5;
@@ -138,7 +143,7 @@ void update(float time_step) {
 
   if (shot_count > previous_shot_count) {
     for (i = previous_shot_count; i < shot_count; i++) {
-      shots[i] = load_obj(GRAFFIKS_RENDERER_FORWARD, "bullet.obj");
+      shots[i] = load_obj(RENDERER, "bullet.obj");
     }
   }
 
@@ -156,6 +161,6 @@ void update(float time_step) {
 }
 
 void done() {
-  terminate_renderers(GRAFFIKS_RENDERER_FORWARD);
+  terminate_renderers(RENDERER);
   bots_free_world(g);
 }
