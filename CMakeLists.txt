@@ -8,6 +8,10 @@ file(GLOB base_SRC
   "src/*.c"
 )
 
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+  add_definitions(-DLINUX)
+endif()
+
 add_executable(graffikalbots ${base_SRC})
 
 find_library(GRAFFIKS_LIB graffiks)
