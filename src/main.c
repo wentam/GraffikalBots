@@ -13,6 +13,7 @@ object *bot1;
 object *bot2;
 object *bot1_turret;
 object *bot2_turret;
+object **shots;
 point_light *l;
 
 int main(int argc, char *argv[]) {
@@ -53,8 +54,20 @@ void init(int *width, int *height) {
   l->z = 5;
 }
 
+int previous_shot_count = 0;
+
 void update(float time_step) {
   bots_tick(g);
+
+  if (g->tanks[0]->health <= 0) {
+    hide_object(bot1);
+    hide_object(bot1_turret);
+  }
+
+  if (g->tanks[1]->health <= 0) {
+    hide_object(bot2);
+    hide_object(bot2_turret);
+  }
 
   bot1->location_x = ((float)g->tanks[0]->x) / 200;
   bot1->location_y = ((float)g->tanks[0]->y) / 200;
@@ -86,6 +99,43 @@ void update(float time_step) {
   bot2->rot_x = 0;
   bot2->rot_y = 0;
   bot2->rot_z = 1;
+
+  int shot_count = 0;
+  int i = 0;
+  while (1) {
+    if (g->shots[i] == NULL) {
+      shot_count = i;
+      break;
+    }
+
+    i++;
+  }
+
+  if (previous_shot_count > shot_count) {
+    for (i = previous_shot_count - 1; i >= shot_count; i--) {
+      remove_object(shots[i]);
+    }
+  }
+
+  shots = realloc(shots, sizeof(object *) * shot_count);
+
+  if (shot_count > previous_shot_count) {
+    for (i = previous_shot_count; i < shot_count; i++) {
+      shots[i] = load_obj(GRAFFIKS_RENDERER_FORWARD, "bullet.obj");
+    }
+  }
+
+  previous_shot_count = shot_count;
+
+  for (i = 0; i < shot_count; i++) {
+    shots[i]->location_x = ((float)g->shots[i]->x) / 200;
+    shots[i]->location_y = ((float)g->shots[i]->y) / 200;
+
+    shots[i]->angle = ((float)g->shots[i]->heading) * 1.4;
+    shots[i]->rot_x = 0;
+    shots[i]->rot_y = 0;
+    shots[i]->rot_z = 1;
+  }
 }
 
 void done() {
