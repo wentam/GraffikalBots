@@ -6,9 +6,9 @@
 #include <graffiks/renderer/renderer.h>
 #include <graffiks/object/object.h>
 #include <graffiks/lights.h>
-#include <bots.h>
+#include <bots/bots.h>
 
-bots_game *g;
+bots_world *g;
 object *bot1;
 object *bot2;
 object *bot1_turret;
@@ -16,7 +16,7 @@ object *bot2_turret;
 point_light *l;
 
 int main(int argc, char *argv[]) {
-  g = bots_create_game();
+  g = bots_create_world();
 
   if (argc == 3) {
     if (!bots_add_bot_from_file(g, argv[1]) ||
@@ -90,5 +90,5 @@ void update(float time_step) {
 
 void done() {
   terminate_renderers(GRAFFIKS_RENDERER_FORWARD);
-  bots_free_game(g);
+  bots_free_world(g);
 }
