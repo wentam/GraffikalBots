@@ -1,5 +1,14 @@
+#define _WIN32_WINNT 0x0500
 #include "main.h"
+
+#ifdef LINUX
 #include <graffiks/driver/driver-linux.h>
+#endif
+#ifdef _WIN32
+#include <graffiks/driver/driver-windows.h>
+#include <windows.h>
+#endif
+
 #include <graffiks/material/material.h>
 #include <graffiks/mesh/cube_mesh.h>
 #include <graffiks/object/obj_loader.h>
@@ -39,7 +48,15 @@ int main(int argc, char *argv[]) {
   g->tanks[0]->x = 200;
   g->tanks[0]->y = 200;
 
+#ifdef LINUX
   init_graffiks_xorg(1024, 768, "GraffikalBots", init, update, done);
+#endif
+#ifdef _WIN32
+  HWND hwndConsole = GetConsoleWindow();
+  HINSTANCE hInstance = (HINSTANCE)GetWindowLongPtr(hwndConsole, GWLP_HINSTANCE);
+    
+  init_graffiks_windows(1024, 768, "GraffikalBots", init, update, done, hInstance);
+#endif
 }
 
 void init(int *width, int *height) {
