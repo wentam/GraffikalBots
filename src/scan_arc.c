@@ -1,3 +1,4 @@
+#define _USE_MATH_DEFINES
 #include "scan_arc.h"
 #include <graffiks/mesh/mesh.h>
 #include <graffiks/material/material.h>
