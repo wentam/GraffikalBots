@@ -127,10 +127,10 @@ void update(float time_step) {
     int scan_arc = g->cpus[i]->ports[14] << 8;
     scan_arc |= g->cpus[i]->ports[15];
 
-    int scan_range = g->cpus[i]->ports[16];
+    int scan_range = g->cpus[i]->ports[16] << 8;
     scan_range |= g->cpus[i]->ports[17];
 
-    update_scan_arc(arcs[i], scan_arc, scan_range * 20);
+    update_scan_arc(arcs[i], scan_arc, scan_range);
 
     arcs[i]->location_x = bots[i]->location_x;
     arcs[i]->location_y = bots[i]->location_y;
