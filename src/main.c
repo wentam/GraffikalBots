@@ -96,13 +96,6 @@ void update(float time_step) {
 
   // loop over bots
   for (i = 0; i < bot_count; i++) {
-
-    // if this bot is dead, hide it
-    if (g->tanks[i]->health <= 0) {
-      hide_object(bots[i]);
-      hide_object(bot_turrets[i]);
-    }
-
     // bot location
     bots[i]->location_x = ((float)g->tanks[i]->x) / 200;
     bots[i]->location_y = ((float)g->tanks[i]->y) / 200;
@@ -119,7 +112,7 @@ void update(float time_step) {
 
     // bot turret angle
     bot_turrets[i]->angle =
-        ((float)g->tanks[0]->heading + (float)g->tanks[i]->turret_offset) * 1.4;
+        ((float)g->tanks[i]->heading + (float)g->tanks[i]->turret_offset) * 1.4;
     bot_turrets[i]->rot_x = 0;
     bot_turrets[i]->rot_y = 0;
     bot_turrets[i]->rot_z = 1;
@@ -136,10 +129,21 @@ void update(float time_step) {
     arcs[i]->location_x = bots[i]->location_x;
     arcs[i]->location_y = bots[i]->location_y;
 
-    arcs[i]->angle = (bot_turrets[i]->angle) - ((scan_arc * 1.4) / 2);
+    arcs[i]->angle =
+        (((float)g->tanks[i]->heading + g->tanks[i]->scanner_offset +
+          (float)g->tanks[i]->turret_offset) *
+         1.4) -
+        ((scan_arc * 1.4) / 2);
     arcs[i]->rot_x = 0;
     arcs[i]->rot_y = 0;
     arcs[i]->rot_z = 1;
+
+    // if this bot is dead, hide it
+    if (g->tanks[i]->health <= 0) {
+      hide_object(bots[i]);
+      hide_object(bot_turrets[i]);
+      hide_object(arcs[i]);
+    }
   }
 
   // shots
