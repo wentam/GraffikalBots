@@ -88,11 +88,17 @@ void init(int *width, int *height) {
 }
 
 int previous_shot_count = 0;
+float time_bottle = 0;
 
 void update(float time_step) {
   int i;
 
-  bots_tick(g);
+  time_bottle += time_step;
+
+  if (time_bottle > 16.6) {
+    bots_tick(g);
+    time_bottle -= 16.6;
+  }
 
   // loop over bots
   for (i = 0; i < bot_count; i++) {
