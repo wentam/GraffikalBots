@@ -20,13 +20,15 @@
 #include <graffiks/object/object.h>
 #include <graffiks/lights.h>
 #include <bots/bots.h>
-
+#include "scan_arc.h"
 
 bots_world *g;
 object *bot1;
 object *bot2;
 object *bot1_turret;
 object *bot2_turret;
+object *arc1;
+object *arc2;
 object **shots;
 point_light *l;
 
@@ -41,7 +43,7 @@ int main(int argc, char *argv[]) {
     }
   } else {
     printf("Please provide two robots\n");
-    return;
+    return 0;
   }
 
   /* hack the bots into position
@@ -58,9 +60,11 @@ int main(int argc, char *argv[]) {
 #endif
 #ifdef _WIN32
   HWND hwndConsole = GetConsoleWindow();
-  HINSTANCE hInstance = (HINSTANCE)GetWindowLongPtr(hwndConsole, GWLP_HINSTANCE);
-    
-  init_graffiks_windows(1024, 768, "GraffikalBots", init, update, done, hInstance);
+  HINSTANCE hInstance =
+      (HINSTANCE)GetWindowLongPtr(hwndConsole, GWLP_HINSTANCE);
+
+  init_graffiks_windows(1024, 768, "GraffikalBots", init, update, done,
+                        hInstance);
 #endif
 }
 
@@ -74,6 +78,9 @@ void init(int *width, int *height) {
 
   l = add_point_light();
   l->z = 5;
+
+  arc1 = create_scan_arc(RENDERER, 16, 500);
+  arc2 = create_scan_arc(RENDERER, 16, 500);
 }
 
 int previous_shot_count = 0;
@@ -91,6 +98,7 @@ void update(float time_step) {
     hide_object(bot2_turret);
   }
 
+  // location
   bot1->location_x = ((float)g->tanks[0]->x) / 200;
   bot1->location_y = ((float)g->tanks[0]->y) / 200;
   bot1_turret->location_x = (((float)g->tanks[0]->x) / 200);
@@ -104,6 +112,23 @@ void update(float time_step) {
   bot1->rot_x = 0;
   bot1->rot_y = 0;
   bot1->rot_z = 1;
+
+  // turret angle
+  int scan_arc = g->cpus[0]->ports[14] << 8;
+  scan_arc |= g->cpus[0]->ports[15];
+
+  int scan_range = g->cpus[0]->ports[16];
+  scan_range |= g->cpus[0]->ports[17];
+
+  update_scan_arc(arc1, scan_arc, scan_range * 20);
+
+  scan_arc = g->cpus[1]->ports[14] << 8;
+  scan_arc |= g->cpus[1]->ports[15];
+
+  scan_range = g->cpus[1]->ports[16];
+  scan_range |= g->cpus[1]->ports[17];
+
+  update_scan_arc(arc2, scan_arc, scan_range * 20);
 
   bot1_turret->angle =
       ((float)g->tanks[0]->heading + (float)g->tanks[0]->turret_offset) * 1.4;
@@ -122,6 +147,24 @@ void update(float time_step) {
   bot2->rot_y = 0;
   bot2->rot_z = 1;
 
+  // scan arc
+  arc1->location_x = bot1->location_x;
+  arc1->location_y = bot1->location_y;
+
+  arc2->location_x = bot2->location_x;
+  arc2->location_y = bot2->location_y;
+
+  arc1->angle = (bot1_turret->angle) - ((scan_arc * 1.4) / 2);
+  arc1->rot_x = 0;
+  arc1->rot_y = 0;
+  arc1->rot_z = 1;
+
+  arc2->angle = (bot2_turret->angle) - ((scan_arc * 1.4) / 2);
+  arc2->rot_x = 0;
+  arc2->rot_y = 0;
+  arc2->rot_z = 1;
+
+  // shots
   int shot_count = 0;
   int i = 0;
   while (1) {

@@ -8,9 +8,12 @@ file(GLOB base_SRC
   "src/*.c"
 )
 
+#set(CMAKE_C_FLAGS "-g -fsanitize=address")
+#set(CMAKE_EXE_LINKER_FLAGS "-g -fsanitize=address")
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   add_definitions(-DLINUX)
 endif()
+
 
 add_executable(graffikalbots ${base_SRC})
 
