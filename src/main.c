@@ -80,7 +80,9 @@ void init(int *width, int *height) {
   l->z = 5;
 
   arc1 = create_scan_arc(RENDERER, 16, 500);
+  arc1->location_z = -0.11;
   arc2 = create_scan_arc(RENDERER, 16, 500);
+  arc2->location_z = -0.11;
 }
 
 int previous_shot_count = 0;

@@ -83,7 +83,7 @@ mesh *_create_scan_mesh(int degrees, int scan_range) {
 object *create_scan_arc(renderer_flags flags, int degrees, int scan_range) {
   mesh *mesha = _create_scan_mesh(degrees, scan_range);
   material *mata = create_material(flags);
-  float color[4] = {0.05, 0.05, 0.05, 1};
+  float color[4] = {0.1, 0.1, 0.1, 1};
   set_diffuse_color(mata, color);
 
   mesh **mesh2 = NULL;
