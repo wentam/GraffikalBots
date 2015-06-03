@@ -110,7 +110,7 @@ void update(float time_step) {
     bots[i]->angle = ((float)g->tanks[i]->heading) * 1.4;
     bots[i]->rot_x = 0;
     bots[i]->rot_y = 0;
-    bots[i]->rot_z = 1;
+    bots[i]->rot_z = -1;
 
     // bot turret location
     bot_turrets[i]->location_x = (((float)g->tanks[i]->x) / 200);
@@ -121,7 +121,7 @@ void update(float time_step) {
         ((float)g->tanks[i]->heading + (float)g->tanks[i]->turret_offset) * 1.4;
     bot_turrets[i]->rot_x = 0;
     bot_turrets[i]->rot_y = 0;
-    bot_turrets[i]->rot_z = 1;
+    bot_turrets[i]->rot_z = -1;
 
     // scan arc
     int scan_arc = g->cpus[i]->ports[14] << 8;
@@ -193,7 +193,7 @@ void update(float time_step) {
     shots[i]->angle = ((float)g->shots[i]->heading) * 1.4;
     shots[i]->rot_x = 0;
     shots[i]->rot_y = 0;
-    shots[i]->rot_z = 1;
+    shots[i]->rot_z = -1;
   }
 }
 
