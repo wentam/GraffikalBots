@@ -138,12 +138,11 @@ void update(float time_step) {
 
     arcs[i]->location_x = bots[i]->location_x;
     arcs[i]->location_y = bots[i]->location_y;
-    printf("scanner offset: %i\n", g->tanks[i]->scanner_offset);
     arcs[i]->angle =
         ((((float)g->tanks[i]->heading + g->tanks[i]->scanner_offset +
            (float)g->tanks[i]->turret_offset) *
           1.4) -
-         ((scan_arc * 1.4) / 2)) -
+         (scan_arc * 2) * 1.4) -
         90 % 360;
     arcs[i]->rot_x = 0;
     arcs[i]->rot_y = 0;
