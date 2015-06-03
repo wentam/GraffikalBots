@@ -138,12 +138,13 @@ void update(float time_step) {
 
     arcs[i]->location_x = bots[i]->location_x;
     arcs[i]->location_y = bots[i]->location_y;
-    arcs[i]->angle =
-        ((((float)g->tanks[i]->heading + g->tanks[i]->scanner_offset +
-           (float)g->tanks[i]->turret_offset) *
-          1.4) -
-         (scan_arc * 3) * 1.4) -
-        90 % 360;
+    float angle = (float)g->tanks[i]->heading +
+                  (float)g->tanks[i]->scanner_offset +
+                  (float)g->tanks[i]->turret_offset;
+    angle *= 1.4;
+    angle += (scan_arc * 1.4);
+
+    arcs[i]->angle = angle;
     arcs[i]->rot_x = 0;
     arcs[i]->rot_y = 0;
     arcs[i]->rot_z = -1;

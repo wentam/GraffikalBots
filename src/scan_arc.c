@@ -21,8 +21,10 @@ mesh *_create_scan_mesh(int degrees, int scan_range) {
     }
 
     double angle_radians = ((i - 1) - 64) * M_PI / 128;
-    verts[i][0] = ((float)floor(0.5 + (scan_range * cos(angle_radians)))) / 200;
-    verts[i][1] = ((float)floor(0.5 + (scan_range * sin(angle_radians)))) / 200;
+    verts[i][0] =
+        -(((float)floor(0.5 + (scan_range * cos(angle_radians)))) / 200);
+    verts[i][1] =
+        -(((float)floor(0.5 + (scan_range * sin(angle_radians)))) / 200);
     verts[i][2] = 0;
   }
 
