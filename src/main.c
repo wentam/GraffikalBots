@@ -127,10 +127,14 @@ void update(float time_step) {
     int scan_arc = g->cpus[i]->ports[14] << 8;
     scan_arc |= g->cpus[i]->ports[15];
 
+    if (scan_arc > 64) {
+      scan_arc = 64;
+    }
+
     int scan_range = g->cpus[i]->ports[16] << 8;
     scan_range |= g->cpus[i]->ports[17];
 
-    update_scan_arc(arcs[i], scan_arc, scan_range);
+    update_scan_arc(arcs[i], scan_arc * 2, scan_range);
 
     arcs[i]->location_x = bots[i]->location_x;
     arcs[i]->location_y = bots[i]->location_y;
@@ -163,6 +167,8 @@ void update(float time_step) {
 
     i++;
   }
+
+  printf("shot_count: %i\n", shot_count);
 
   if (previous_shot_count > shot_count) {
     for (i = previous_shot_count - 1; i >= shot_count; i--) {
