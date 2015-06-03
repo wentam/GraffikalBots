@@ -146,7 +146,7 @@ void update(float time_step) {
         ((scan_arc * 1.4) / 2);
     arcs[i]->rot_x = 0;
     arcs[i]->rot_y = 0;
-    arcs[i]->rot_z = 1;
+    arcs[i]->rot_z = -1;
 
     // if this bot is dead, hide it
     if (g->tanks[i]->health <= 0) {
