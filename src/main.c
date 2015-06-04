@@ -11,7 +11,7 @@
 #endif
 
 #include <graffiks/driver.h>
-#include <graffiks/material/material.h>
+#include <graffiks/material.h>
 #include <graffiks/mesh/cube_mesh.h>
 #include <graffiks/object/obj_loader.h>
 #include <graffiks/renderer/renderer.h>
