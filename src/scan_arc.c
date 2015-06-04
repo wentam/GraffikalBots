@@ -86,8 +86,7 @@ gfks_object *create_scan_arc(gfks_renderer_flags flags, int degrees,
                              int scan_range) {
   gfks_mesh *mesha = _create_scan_mesh(degrees, scan_range);
   gfks_material *mata = gfks_create_material(flags);
-  float color[4] = {0.1, 0.1, 0.1, 1};
-  gfks_set_diffuse_color(mata, color);
+  gfks_set_material_diffuse_color_rgba(mata, 0.1, 0.1, 0.1, 1);
 
   gfks_mesh **mesh2 = NULL;
   mesh2 = malloc(sizeof(gfks_mesh *));
