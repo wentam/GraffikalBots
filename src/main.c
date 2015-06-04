@@ -13,9 +13,9 @@
 #include <graffiks/driver.h>
 #include <graffiks/material.h>
 #include <graffiks/mesh/cube_mesh.h>
-#include <graffiks/object/obj_loader.h>
+#include <graffiks/model_loaders/obj_loader.h>
 #include <graffiks/renderer/renderer.h>
-#include <graffiks/object/object.h>
+#include <graffiks/object.h>
 #include <graffiks/lights.h>
 #include <bots/bots.h>
 #include "scan_arc.h"

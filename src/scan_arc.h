@@ -1,6 +1,6 @@
 #ifndef SCAN_ARC_H
 #define SCAN_ARC_H
-#include <graffiks/object/object.h>
+#include <graffiks/object.h>
 #include <graffiks/renderer/renderer.h>
 
 // degrees is 0-256

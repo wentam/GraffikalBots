@@ -1,7 +1,7 @@
 #define _USE_MATH_DEFINES
 #include "scan_arc.h"
 #include <graffiks/mesh/mesh.h>
-#include <graffiks/material/material.h>
+#include <graffiks/material.h>
 #include <math.h>
 
 gfks_mesh *_create_scan_mesh(int degrees, int scan_range) {
