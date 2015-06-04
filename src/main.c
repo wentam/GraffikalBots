@@ -2,17 +2,15 @@
 #include "main.h"
 
 #ifdef LINUX
-#include <graffiks/driver/driver-linux.h>
 /* forward renderer for anti-aliasing */
 #define RENDERER GFKS_RENDERER_FORWARD
 #endif
 #ifdef _WIN32
-#include <graffiks/driver/driver-windows.h>
-#include <windows.h>
 /* deferred renderer because the forward renderer doesn't work on windows yet */
 #define RENDERER GFKS_RENDERER_DEFERRED
 #endif
 
+#include <graffiks/driver.h>
 #include <graffiks/material/material.h>
 #include <graffiks/mesh/cube_mesh.h>
 #include <graffiks/object/obj_loader.h>
@@ -55,16 +53,7 @@ int main(int argc, char *argv[]) {
   g->tanks[0]->x = 200;
   g->tanks[0]->y = 200;
 
-#ifdef LINUX
-  gfks_init_xorg(1024, 768, "GraffikalBots", init, update, done);
-#endif
-#ifdef _WIN32
-  HWND hwndConsole = GetConsoleWindow();
-  HINSTANCE hInstance =
-      (HINSTANCE)GetWindowLongPtr(hwndConsole, GWLP_HINSTANCE);
-
-  gfks_init_windows(1024, 768, "GraffikalBots", init, update, done, hInstance);
-#endif
+  gfks_init(1024, 768, "GraffikalBots", init, update, done);
 }
 
 void init(int *width, int *height) {
