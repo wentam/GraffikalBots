@@ -4,7 +4,7 @@
 #include <graffiks/material/material.h>
 #include <math.h>
 
-mesh *_create_scan_mesh(int degrees, int scan_range) {
+gfks_mesh *_create_scan_mesh(int degrees, int scan_range) {
   int i, j;
 
   // create vertices for tris in 1.4 degree steps
@@ -59,7 +59,7 @@ mesh *_create_scan_mesh(int degrees, int scan_range) {
   normals[0][1] = 0;
   normals[0][2] = 1;
 
-  mesh *mesh = create_mesh(verts, faces, degrees, normals);
+  gfks_mesh *mesh = gfks_create_mesh(verts, faces, degrees, normals);
 
   // free verts
   for (i = 0; i < degrees + 2; i++) {
@@ -82,28 +82,28 @@ mesh *_create_scan_mesh(int degrees, int scan_range) {
 
   return mesh;
 }
-
-object *create_scan_arc(renderer_flags flags, int degrees, int scan_range) {
-  mesh *mesha = _create_scan_mesh(degrees, scan_range);
-  material *mata = create_material(flags);
+gfks_object *create_scan_arc(gfks_renderer_flags flags, int degrees,
+                             int scan_range) {
+  gfks_mesh *mesha = _create_scan_mesh(degrees, scan_range);
+  gfks_material *mata = gfks_create_material(flags);
   float color[4] = {0.1, 0.1, 0.1, 1};
-  set_diffuse_color(mata, color);
+  gfks_set_diffuse_color(mata, color);
 
-  mesh **mesh2 = NULL;
-  mesh2 = malloc(sizeof(mesh *));
+  gfks_mesh **mesh2 = NULL;
+  mesh2 = malloc(sizeof(gfks_mesh *));
   mesh2[0] = mesha;
 
-  material **mat2 = NULL;
-  mat2 = malloc(sizeof(material *));
+  gfks_material **mat2 = NULL;
+  mat2 = malloc(sizeof(gfks_material *));
   mat2[0] = mata;
 
-  object *o = create_object(mesh2, mat2, 1);
+  gfks_object *o = gfks_create_object(mesh2, mat2, 1);
   return o;
 }
 
-void update_scan_arc(object *o, int degrees, int scan_range) {
-  hide_object(o);
-  free_mesh(o->meshes[0]);
+void update_scan_arc(gfks_object *o, int degrees, int scan_range) {
+  gfks_hide_object(o);
+  gfks_free_mesh(o->meshes[0]);
   o->meshes[0] = _create_scan_mesh(degrees, scan_range);
-  show_object(o);
+  gfks_show_object(o);
 }

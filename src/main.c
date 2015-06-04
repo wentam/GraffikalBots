@@ -23,11 +23,11 @@
 #include "scan_arc.h"
 
 bots_world *g;
-object **bots;
-object **bot_turrets;
-object **arcs;
-object **shots;
-point_light *l;
+gfks_object **bots;
+gfks_object **bot_turrets;
+gfks_object **arcs;
+gfks_object **shots;
+gfks_point_light *l;
 int bot_count = 0;
 
 int main(int argc, char *argv[]) {
@@ -56,34 +56,33 @@ int main(int argc, char *argv[]) {
   g->tanks[0]->y = 200;
 
 #ifdef LINUX
-  init_graffiks_xorg(1024, 768, "GraffikalBots", init, update, done);
+  gfks_init_xorg(1024, 768, "GraffikalBots", init, update, done);
 #endif
 #ifdef _WIN32
   HWND hwndConsole = GetConsoleWindow();
   HINSTANCE hInstance =
       (HINSTANCE)GetWindowLongPtr(hwndConsole, GWLP_HINSTANCE);
 
-  init_graffiks_windows(1024, 768, "GraffikalBots", init, update, done,
-                        hInstance);
+  gfks_init_windows(1024, 768, "GraffikalBots", init, update, done, hInstance);
 #endif
 }
 
 void init(int *width, int *height) {
-  init_renderers(RENDERER);
+  gfks_init_renderers(RENDERER);
 
-  bots = malloc(sizeof(object *) * bot_count);
-  bot_turrets = malloc(sizeof(object *) * bot_count);
-  arcs = malloc(sizeof(object *) * bot_count);
+  bots = malloc(sizeof(gfks_object *) * bot_count);
+  bot_turrets = malloc(sizeof(gfks_object *) * bot_count);
+  arcs = malloc(sizeof(gfks_object *) * bot_count);
 
   int i;
   for (i = 0; i < bot_count; i++) {
-    bots[i] = load_obj(RENDERER, "bot.obj");
-    bot_turrets[i] = load_obj(RENDERER, "bot_turret.obj");
+    bots[i] = gfks_load_obj(RENDERER, "bot.obj");
+    bot_turrets[i] = gfks_load_obj(RENDERER, "bot_turret.obj");
     arcs[i] = create_scan_arc(RENDERER, 128, 500);
     arcs[i]->location_z = -0.11;
   }
 
-  l = add_point_light();
+  l = gfks_add_point_light();
   l->z = 5;
 }
 
@@ -151,9 +150,9 @@ void update(float time_step) {
 
     // if this bot is dead, hide it
     if (g->tanks[i]->health <= 0) {
-      hide_object(bots[i]);
-      hide_object(bot_turrets[i]);
-      hide_object(arcs[i]);
+      gfks_hide_object(bots[i]);
+      gfks_hide_object(bot_turrets[i]);
+      gfks_hide_object(arcs[i]);
     }
   }
 
@@ -173,15 +172,15 @@ void update(float time_step) {
 
   if (previous_shot_count > shot_count) {
     for (i = previous_shot_count - 1; i >= shot_count; i--) {
-      remove_object(shots[i]);
+      gfks_remove_object(shots[i]);
     }
   }
 
-  shots = realloc(shots, sizeof(object *) * shot_count);
+  shots = realloc(shots, sizeof(gfks_object *) * shot_count);
 
   if (shot_count > previous_shot_count) {
     for (i = previous_shot_count; i < shot_count; i++) {
-      shots[i] = load_obj(RENDERER, "bullet.obj");
+      shots[i] = gfks_load_obj(RENDERER, "bullet.obj");
     }
   }
 
@@ -199,7 +198,7 @@ void update(float time_step) {
 }
 
 void done() {
-  terminate_renderers(RENDERER);
+  gfks_terminate_renderers(RENDERER);
   free(bots);
   free(bot_turrets);
   free(arcs);

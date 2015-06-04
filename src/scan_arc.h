@@ -4,7 +4,8 @@
 #include <graffiks/renderer/renderer.h>
 
 // degrees is 0-256
-object *create_scan_arc(renderer_flags flags, int degrees, int scan_range);
-void update_scan_arc(object *o, int degrees, int scan_range);
+gfks_object *create_scan_arc(gfks_renderer_flags flags, int degrees,
+                             int scan_range);
+void update_scan_arc(gfks_object *o, int degrees, int scan_range);
 
 #endif
