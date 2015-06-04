@@ -4,13 +4,13 @@
 #ifdef LINUX
 #include <graffiks/driver/driver-linux.h>
 /* forward renderer for anti-aliasing */
-#define RENDERER GRAFFIKS_RENDERER_FORWARD
+#define RENDERER GFKS_RENDERER_FORWARD
 #endif
 #ifdef _WIN32
 #include <graffiks/driver/driver-windows.h>
 #include <windows.h>
 /* deferred renderer because the forward renderer doesn't work on windows yet */
-#define RENDERER GRAFFIKS_RENDERER_DEFERRED
+#define RENDERER GFKS_RENDERER_DEFERRED
 #endif
 
 #include <graffiks/material/material.h>
