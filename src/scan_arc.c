@@ -1,6 +1,6 @@
 #define _USE_MATH_DEFINES
 #include "scan_arc.h"
-#include <graffiks/mesh/mesh.h>
+#include <graffiks/mesh.h>
 #include <graffiks/material.h>
 #include <math.h>
 

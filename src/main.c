@@ -12,7 +12,6 @@
 
 #include <graffiks/driver.h>
 #include <graffiks/material.h>
-#include <graffiks/mesh/cube_mesh.h>
 #include <graffiks/model_loaders/obj_loader.h>
 #include <graffiks/renderer/renderer.h>
 #include <graffiks/object.h>
