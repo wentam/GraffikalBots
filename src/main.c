@@ -16,6 +16,7 @@
 #include <graffiks/renderer/renderer.h>
 #include <graffiks/object.h>
 #include <graffiks/lights.h>
+#include <graffiks/camera.h>
 #include <bots/bots.h>
 #include "scan_arc.h"
 
@@ -72,6 +73,10 @@ void init(int *width, int *height) {
 
   l = gfks_add_point_light();
   l->z = 5;
+
+  gfks_camera *c = gfks_create_camera();
+  gfks_set_camera_location(c, 0, 0, 7);
+  gfks_set_active_camera(c);
 }
 
 int previous_shot_count = 0;
