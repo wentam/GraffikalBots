@@ -10,15 +10,17 @@
 #define RENDERER GFKS_RENDERER_DEFERRED
 #endif
 
-#include <graffiks/driver.h>
+#include "scan_arc.h"
+
+#include <graffiks/graffiks.h>
 #include <graffiks/material.h>
 #include <graffiks/model_loaders/obj_loader.h>
 #include <graffiks/renderer/renderer.h>
 #include <graffiks/object.h>
 #include <graffiks/lights.h>
 #include <graffiks/camera.h>
+
 #include <bots/bots.h>
-#include "scan_arc.h"
 
 bots_world *g;
 gfks_object **bots;
@@ -53,7 +55,7 @@ int main(int argc, char *argv[]) {
   g->tanks[0]->x = 200;
   g->tanks[0]->y = 200;
 
-  gfks_init(1024, 768, "GraffikalBots", init, update, done);
+  gfks_init_dt(1024, 768, "GraffikalBots", init, update, done);
 }
 
 void init(int *width, int *height) {
