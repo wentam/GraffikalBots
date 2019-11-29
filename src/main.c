@@ -99,7 +99,7 @@ void init(int *width, int *height) {
     bots[i] = gfks_load_obj(RENDERER, "bot.obj");
     bot_turrets[i] = gfks_load_obj(RENDERER, "bot_turret.obj");
     arcs[i] = create_scan_arc(RENDERER, 128, 500);
-    arcs[i]->location_z = -0.11;
+    arcs[i]->location_z = -0.12;
   }
 
   l = gfks_add_point_light();
