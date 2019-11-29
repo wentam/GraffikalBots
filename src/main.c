@@ -21,6 +21,8 @@
 #include <graffiks/camera.h>
 
 #include <bots/bots.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_syswm.h>
 
 bots_world *g;
 gfks_object **bots;
@@ -31,6 +33,7 @@ gfks_point_light *l;
 int bot_count = 0;
 
 int main(int argc, char *argv[]) {
+  // initialize engine
   g = bots_create_world();
 
   if (argc == 3) {
@@ -55,7 +58,26 @@ int main(int argc, char *argv[]) {
   g->tanks[0]->x = 200;
   g->tanks[0]->y = 200;
 
-  gfks_init_dt(1024, 768, "GraffikalBots", init, update, done);
+  // initialize SDL
+  if (SDL_Init(SDL_INIT_VIDEO)) {
+    printf("Failed to initialize SDL: %s\n",SDL_GetError());
+  }
+
+  SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+  SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 16);
+
+  SDL_Window *window = SDL_CreateWindow(
+      "GraffikalBots", 0, 0, 1024, 768, 
+      SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE);
+
+
+  SDL_SysWMinfo wmInfo;
+  SDL_VERSION(&wmInfo.version);
+  if (SDL_GetWindowWMInfo(window, &wmInfo) == SDL_FALSE) {
+    printf("Failed to get window info: %s\n",SDL_GetError());
+  }
+
+  gfks_init_with_window_dt(wmInfo.info.x11.display, wmInfo.info.x11.window, init, update, done);
 }
 
 void init(int *width, int *height) {
@@ -86,13 +108,30 @@ float time_bottle = 0;
 
 void update(float time_step) {
   int i;
+  bots_events *bots_events;
 
   time_bottle += time_step;
 
   if (time_bottle > 16.6) {
-    bots_tick(g);
+    bots_events = bots_tick(g);
+
+    for (int i = 0; i < bots_events->event_count; i++) {
+      printf("got event %i\n",bots_events->events[i].event_type);
+    }
+
     time_bottle -= 16.6;
+  } 
+
+  // mouse test
+  SDL_Event e;
+  while (SDL_PollEvent(&e)!=0) {
   }
+
+ 
+  int x = 5;
+  int y = 5;
+  SDL_GetMouseState(&x, &y);
+  printf("mouse location: %i,%i\n",x,y);
 
   // loop over bots
   for (i = 0; i < bot_count; i++) {
@@ -162,7 +201,7 @@ void update(float time_step) {
     i++;
   }
 
-  printf("shot_count: %i\n", shot_count);
+  //printf("shot_count: %i\n", shot_count);
 
   if (previous_shot_count > shot_count) {
     for (i = previous_shot_count - 1; i >= shot_count; i--) {
