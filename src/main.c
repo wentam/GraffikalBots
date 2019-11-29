@@ -23,6 +23,7 @@
 #include <bots/bots.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_syswm.h>
+#include <signal.h>
 
 bots_world *g;
 gfks_object **bots;
@@ -32,7 +33,13 @@ gfks_object **shots;
 gfks_point_light *l;
 int bot_count = 0;
 
+void intHandler(int i){
+  exit(0);
+}
+
 int main(int argc, char *argv[]) {
+  signal(SIGINT, intHandler);
+
   // initialize engine
   g = bots_create_world();
 
