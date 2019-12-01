@@ -94,8 +94,7 @@ void init(int *width, int *height) {
   bot_turrets = malloc(sizeof(gfks_object *) * bot_count);
   arcs = malloc(sizeof(gfks_object *) * bot_count);
 
-  int i;
-  for (i = 0; i < bot_count; i++) {
+  for (int i = 0; i < bot_count; i++) {
     bots[i] = gfks_load_obj(RENDERER, "bot.obj");
     bot_turrets[i] = gfks_load_obj(RENDERER, "bot_turret.obj");
     arcs[i] = create_scan_arc(RENDERER, 128, 500);
@@ -108,6 +107,23 @@ void init(int *width, int *height) {
   gfks_camera *c = gfks_create_camera();
   gfks_set_camera_location(c, 0, 0, 7);
   gfks_set_active_camera(c);
+}
+
+void handle_engine_event(bots_event *e) {
+  switch (e->event_type) {
+    case BOTS_EVENT_SCAN:
+      printf("scan, showing scan arc, %i\n",e->bot_id);
+      break;
+    case BOTS_EVENT_FIRE:
+      printf("bang!\n");
+      break;
+    case  BOTS_EVENT_HIT:
+      printf("hit tank %i\n", e->bot_id);
+      break;
+    case BOTS_EVENT_DEATH:
+      printf("bot %i ded\n", e->bot_id);
+      break;
+  }
 }
 
 int previous_shot_count = 0;
@@ -123,7 +139,7 @@ void update(float time_step) {
     bots_events = bots_tick(g);
 
     for (int i = 0; i < bots_events->event_count; i++) {
-      printf("got event %i\n",bots_events->events[i].event_type);
+      handle_engine_event(bots_events->events+i);
     }
 
     time_bottle -= 16.6;
@@ -133,7 +149,6 @@ void update(float time_step) {
   SDL_Event e;
   while (SDL_PollEvent(&e)!=0) {
   }
-
  
   int x = 5;
   int y = 5;
