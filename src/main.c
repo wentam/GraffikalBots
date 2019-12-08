@@ -112,16 +112,16 @@ void init(int *width, int *height) {
 void handle_engine_event(bots_event *e) {
   switch (e->event_type) {
     case BOTS_EVENT_SCAN:
-      printf("scan, showing scan arc, %i\n",e->bot_id);
+   //   printf("scan, showing scan arc, %i\n",e->bot_id);
       break;
     case BOTS_EVENT_FIRE:
-      printf("bang!\n");
+    //  printf("bang!\n");
       break;
     case  BOTS_EVENT_HIT:
-      printf("hit tank %i\n", e->bot_id);
+     // printf("hit tank %i\n", e->bot_id);
       break;
     case BOTS_EVENT_DEATH:
-      printf("bot %i ded\n", e->bot_id);
+      //printf("bot %i ded\n", e->bot_id);
       break;
   }
 }
@@ -153,7 +153,7 @@ void update(float time_step) {
   int x = 5;
   int y = 5;
   SDL_GetMouseState(&x, &y);
-  printf("mouse location: %i,%i\n",x,y);
+  //printf("mouse location: %i,%i\n",x,y);
 
   // loop over bots
   for (i = 0; i < bot_count; i++) {
@@ -179,15 +179,22 @@ void update(float time_step) {
     bot_turrets[i]->rot_z = -1;
 
     // scan arc
-    int scan_arc = g->cpus[i]->ports[14] << 8;
-    scan_arc |= g->cpus[i]->ports[15];
+   // int scan_arc = g->cpus[i]->ports[14] << 8;
+    //scan_arc |= g->cpus[i]->ports[15];
+    int scan_arc = g->cpus[i]->memory[0xfee5];
 
     if (scan_arc > 64) {
       scan_arc = 64;
     }
 
-    int scan_range = g->cpus[i]->ports[16] << 8;
-    scan_range |= g->cpus[i]->ports[17];
+    if (i == 0) {
+    printf("scan arc %i\n", scan_arc);
+    }
+
+ //   int scan_range = g->cpus[i]->ports[16] << 8;
+  //  scan_range |= g->cpus[i]->ports[17];
+    int scan_range = g->cpus[i]->memory[0xfee6] << 8;
+    scan_range |= g->cpus[i]->memory[0xfee7];
 
     update_scan_arc(arcs[i], scan_arc * 2, scan_range);
 
