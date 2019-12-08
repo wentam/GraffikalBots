@@ -77,6 +77,9 @@ int main(int argc, char *argv[]) {
       "GraffikalBots", 0, 0, 1024, 768, 
       SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE);
 
+  if (window == NULL) {
+    printf("Failed to create window: %s\n",SDL_GetError());
+  }
 
   SDL_SysWMinfo wmInfo;
   SDL_VERSION(&wmInfo.version);
