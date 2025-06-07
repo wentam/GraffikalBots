@@ -41,14 +41,12 @@ int main(int argc, char *argv[]) {
   signal(SIGINT, intHandler);
 
   // initialize engine
-  g = bots_create_world();
+  bots_world_config my_config = bots_default_world_config();
+  g = bots_world_new(&my_config);
 
   if (argc == 3) {
-    if (!bots_add_bot_from_file(g, argv[1]) ||
-        !bots_add_bot_from_file(g, argv[2])) {
-      printf("Unable to load bots\n");
-      return 1;
-    }
+    bots_world_add_bot(g, argv[1]);
+    bots_world_add_bot(g, argv[2]);
   } else {
     printf("Please provide two robots\n");
     return 0;
@@ -56,26 +54,26 @@ int main(int argc, char *argv[]) {
 
   bot_count = 2;
 
-  /* hack the bots into position
-   *
-   * We only do this because bots_add_bot doesn't position the bots at all
-   * right now. In the future, it'll position them with some standard
-   * algorithm.
-   */
-  g->tanks[0]->x = 200;
-  g->tanks[0]->y = 200;
+  bots_world_place_bots(g);
 
   // initialize SDL
   if (SDL_Init(SDL_INIT_VIDEO)) {
     printf("Failed to initialize SDL: %s\n",SDL_GetError());
   }
 
+//SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+//SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+//SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+
   SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
   SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 16);
 
+  //SDL_Window *window = SDL_CreateWindow(
+  //    "bots", 0, 0, 1024, 768,
+  //    SDL_WINDOW_OPENGL);
   SDL_Window *window = SDL_CreateWindow(
-      "GraffikalBots", 0, 0, 1024, 768, 
-      SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE);
+      "bots", 0, 0, 1024, 768,
+      0);
 
   if (window == NULL) {
     printf("Failed to create window: %s\n",SDL_GetError());
@@ -112,38 +110,38 @@ void init(int *width, int *height) {
   gfks_set_active_camera(c);
 }
 
-void handle_engine_event(bots_event *e) {
-  switch (e->event_type) {
-    case BOTS_EVENT_SCAN:
-   //   printf("scan, showing scan arc, %i\n",e->bot_id);
-      break;
-    case BOTS_EVENT_FIRE:
-    //  printf("bang!\n");
-      break;
-    case  BOTS_EVENT_HIT:
-     // printf("hit tank %i\n", e->bot_id);
-      break;
-    case BOTS_EVENT_DEATH:
-      //printf("bot %i ded\n", e->bot_id);
-      break;
-  }
-}
+//void handle_engine_event(bots_event *e) {
+//  switch (e->event_type) {
+//    case BOTS_EVENT_SCAN:
+//   //   printf("scan, showing scan arc, %i\n",e->bot_id);
+//      break;
+//    case BOTS_EVENT_FIRE:
+//    //  printf("bang!\n");
+//      break;
+//    case  BOTS_EVENT_HIT:
+//     // printf("hit tank %i\n", e->bot_id);
+//      break;
+//    case BOTS_EVENT_DEATH:
+//      //printf("bot %i ded\n", e->bot_id);
+//      break;
+//  }
+//}
 
 int previous_shot_count = 0;
 float time_bottle = 0;
 
 void update(float time_step) {
   int i;
-  bots_events *bots_events;
+  //bots_events *bots_events;
 
   time_bottle += time_step;
 
   if (time_bottle > 16.6) {
-    bots_events = bots_tick(g);
+    bots_tick(g);
 
-    for (int i = 0; i < bots_events->event_count; i++) {
-      handle_engine_event(bots_events->events+i);
-    }
+    //for (int i = 0; i < bots_events->event_count; i++) {
+    //  handle_engine_event(bots_events->events+i);
+    //}
 
     time_bottle -= 16.6;
   } 
@@ -161,30 +159,29 @@ void update(float time_step) {
   // loop over bots
   for (i = 0; i < bot_count; i++) {
     // bot location
-    bots[i]->location_x = ((float)g->tanks[i]->x) / 200;
-    bots[i]->location_y = ((float)g->tanks[i]->y) / 200;
+    bots[i]->location_x = ((float)bots_get_tank(g,i)->x) / 200;
+    bots[i]->location_y = ((float)bots_get_tank(g,i)->y) / 200;
 
     // bot angle
-    bots[i]->angle = ((float)g->tanks[i]->heading) * 1.4;
+    bots[i]->angle = ((float)bots_get_tank(g,i)->heading) * 1.4;
     bots[i]->rot_x = 0;
     bots[i]->rot_y = 0;
     bots[i]->rot_z = -1;
 
     // bot turret location
-    bot_turrets[i]->location_x = (((float)g->tanks[i]->x) / 200);
-    bot_turrets[i]->location_y = (((float)g->tanks[i]->y) / 200);
+    bot_turrets[i]->location_x = (((float)bots_get_tank(g,i)->x) / 200);
+    bot_turrets[i]->location_y = (((float)bots_get_tank(g,i)->y) / 200);
 
     // bot turret angle
     bot_turrets[i]->angle =
-        ((float)g->tanks[i]->heading + (float)g->tanks[i]->turret_offset) * 1.4;
+        ((float)bots_get_tank(g,i)->heading + (float)bots_get_tank(g,i)->turret_offset) * 1.4;
     bot_turrets[i]->rot_x = 0;
     bot_turrets[i]->rot_y = 0;
     bot_turrets[i]->rot_z = -1;
 
     // scan arc
-   // int scan_arc = g->cpus[i]->ports[14] << 8;
-    //scan_arc |= g->cpus[i]->ports[15];
-    int scan_arc = g->cpus[i]->memory[0xfee5];
+    //int scan_arc = g->cpus[i]->memory[0xfee5];
+    int scan_arc = 30; // TODO tmp, interface changed and now we don't have memory or access to this number
 
     if (scan_arc > 64) {
       scan_arc = 64;
@@ -194,17 +191,16 @@ void update(float time_step) {
     printf("scan arc %i\n", scan_arc);
     }
 
- //   int scan_range = g->cpus[i]->ports[16] << 8;
-  //  scan_range |= g->cpus[i]->ports[17];
-    int scan_range = g->cpus[i]->memory[0xfee6] << 8;
-    scan_range |= g->cpus[i]->memory[0xfee7];
+    //int scan_range = g->cpus[i]->memory[0xfee6] << 8;
+    //scan_range |= g->cpus[i]->memory[0xfee7];
+    int scan_range = 100; // TODO tmp, interface changed and now we don't have memory or access to this number
 
     update_scan_arc(arcs[i], scan_arc * 2, scan_range);
 
     arcs[i]->location_x = bots[i]->location_x;
     arcs[i]->location_y = bots[i]->location_y;
-    float angle = (float)g->tanks[i]->heading +
-                  (float)g->tanks[i]->scanner_offset;
+    float angle = (float)bots_get_tank(g, i)->heading +
+                  (float)bots_get_tank(g, i)->scanner_offset;
     angle *= 1.4;
     angle += (scan_arc * 1.4);
 
@@ -214,7 +210,7 @@ void update(float time_step) {
     arcs[i]->rot_z = -1;
 
     // if this bot is dead, hide it
-    if (g->tanks[i]->health <= 0) {
+    if (bots_get_tank(g, i)->health <= 0) {
       gfks_hide_object(bots[i]);
       gfks_hide_object(bot_turrets[i]);
       gfks_hide_object(arcs[i]);
@@ -222,44 +218,45 @@ void update(float time_step) {
   }
 
   // shots
-  int shot_count = 0;
-  i = 0;
-  while (1) {
-    if (g->shots[i] == NULL) {
-      shot_count = i;
-      break;
-    }
+  // TODO we don't have access to the data needed to display shots anymore
+  //int shot_count = 0;
+  //i = 0;
+  //while (1) {
+  //  if (g->shots[i] == NULL) {
+  //    shot_count = i;
+  //    break;
+  //  }
 
-    i++;
-  }
+  //  i++;
+  //}
 
   //printf("shot_count: %i\n", shot_count);
 
-  if (previous_shot_count > shot_count) {
-    for (i = previous_shot_count - 1; i >= shot_count; i--) {
-      gfks_remove_object(shots[i]);
-    }
-  }
+  //if (previous_shot_count > shot_count) {
+  //  for (i = previous_shot_count - 1; i >= shot_count; i--) {
+  //    gfks_remove_object(shots[i]);
+  //  }
+  //}
 
-  shots = realloc(shots, sizeof(gfks_object *) * shot_count);
+  //shots = realloc(shots, sizeof(gfks_object *) * shot_count);
 
-  if (shot_count > previous_shot_count) {
-    for (i = previous_shot_count; i < shot_count; i++) {
-      shots[i] = gfks_load_obj(RENDERER, "bullet.obj");
-    }
-  }
+  //if (shot_count > previous_shot_count) {
+  //  for (i = previous_shot_count; i < shot_count; i++) {
+  //    shots[i] = gfks_load_obj(RENDERER, "bullet.obj");
+  //  }
+  //}
 
-  previous_shot_count = shot_count;
+  //previous_shot_count = shot_count;
 
-  for (i = 0; i < shot_count; i++) {
-    shots[i]->location_x = ((float)g->shots[i]->x) / 200;
-    shots[i]->location_y = ((float)g->shots[i]->y) / 200;
+  //for (i = 0; i < shot_count; i++) {
+  //  shots[i]->location_x = ((float)g->shots[i]->x) / 200;
+  //  shots[i]->location_y = ((float)g->shots[i]->y) / 200;
 
-    shots[i]->angle = ((float)g->shots[i]->heading) * 1.4;
-    shots[i]->rot_x = 0;
-    shots[i]->rot_y = 0;
-    shots[i]->rot_z = -1;
-  }
+  //  shots[i]->angle = ((float)g->shots[i]->heading) * 1.4;
+  //  shots[i]->rot_x = 0;
+  //  shots[i]->rot_y = 0;
+  //  shots[i]->rot_z = -1;
+  //}
 }
 
 void done() {
@@ -267,5 +264,5 @@ void done() {
   free(bots);
   free(bot_turrets);
   free(arcs);
-  bots_free_world(g);
+  bots_world_free(g);
 }

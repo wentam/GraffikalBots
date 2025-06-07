@@ -8,7 +8,7 @@ file(GLOB base_SRC
   "src/*.c"
 )
 
-#set(CMAKE_C_FLAGS "-g -fsanitize=address")
+set(CMAKE_C_FLAGS "-fcommon")
 #set(CMAKE_EXE_LINKER_FLAGS "-g -fsanitize=address")
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   add_definitions(-DLINUX)
@@ -25,3 +25,5 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
   set(M_LIB "")
 endif()
 target_link_libraries(graffikalbots ${GRAFFIKS_LIB} ${BOTS_LIB} ${M_LIB} ${SDL_LIB})
+
+install(TARGETS graffikalbots DESTINATION bin)
