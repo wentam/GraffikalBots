@@ -23,9 +23,6 @@
         };
         buildInputs = with pkgs; [cargo rustc rust-cbindgen fmt glfw libpng];
         cargoHash = "sha256-0on1LOGK1Ldba7GnGd8+kjxNlb6zNOS/2/n2sdRtso8=";
-        /* preBuild = ''
-          sed -i.bk 's/\["lib"\]/["lib","cdylib","staticlib"]/' Cargo.toml
-        ''; */
 
         postInstall = ''
           export PATH=$PATH:${pkgs.rust-cbindgen}/bin/

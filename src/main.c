@@ -106,7 +106,7 @@ void init(int *width, int *height) {
   l->z = 5;
 
   gfks_camera *c = gfks_create_camera();
-  gfks_set_camera_location(c, 0, 0, 7);
+  gfks_set_camera_location(c, 0, 0, 12);
   gfks_set_active_camera(c);
 }
 
